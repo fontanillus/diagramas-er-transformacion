@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="light" />
+    <meta name="description" content="Cuatro ejercicios prácticos de diagramas entidad-relación para aprender a diseñar bases de datos." />
+    <title>ER Lab — Ejercicios de bases de datos</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      :focus-visible { outline: 3px solid #4f46e5; outline-offset: 4px; }
+      summary { cursor: pointer; }
+    </style>
+  </head>
+  <body class="min-h-screen bg-slate-50 font-sans text-slate-900 antialiased">
+    <a href="#ejercicios" class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-10 focus:rounded-lg focus:bg-white focus:p-3">Saltar a los ejercicios</a>
+    <header class="border-b border-slate-200 bg-white">
+      <div class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-5 sm:px-8">
+        <a href="#" class="flex items-center gap-3 font-bold tracking-tight" aria-label="ER Lab, inicio">
+          <span class="grid h-10 w-10 place-items-center rounded-xl bg-indigo-600 text-sm text-white" aria-hidden="true">ER</span>
+          <span>ER Lab<span class="ml-2 hidden text-sm font-normal text-slate-500 sm:inline">/ Bases de datos</span></span>
+        </a>
+        <span class="rounded-full bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-700">Colección 01</span>
+      </div>
+    </header>
+
+    <main class="mx-auto max-w-6xl px-5 pb-16 sm:px-8">
+      <section class="py-12 sm:py-16" aria-labelledby="titulo">
+        <p class="mb-4 text-xs font-bold uppercase tracking-widest text-indigo-600">Aprende · Modela · Comprueba</p>
+        <h1 id="titulo" class="max-w-3xl text-4xl font-extrabold leading-tight tracking-tight sm:text-5xl lg:text-6xl">Ejercicios <span class="text-indigo-600">Modelo Entidad/Relación</span></h1>
+        <p class="mt-5 max-w-2xl text-base leading-relaxed text-slate-600 sm:text-lg">Cuatro escenarios para practicar entidades, atributos y relaciones. Analiza cada caso y compara tu propuesta con una solución orientativa.</p>
+        <div class="mt-7 flex flex-wrap gap-2 text-xs font-medium text-slate-600">
+          <span class="rounded-full border border-slate-200 bg-white px-3 py-2">04 ejercicios</span>
+          <span class="rounded-full border border-slate-200 bg-white px-3 py-2">Nivel inicial → avanzado</span>
+          <span class="rounded-full border border-slate-200 bg-white px-3 py-2">Modelo entidad-relación</span>
+        </div>
+      </section>
+
+      <section id="ejercicios" class="scroll-mt-6" aria-labelledby="ejercicios-titulo">
+        <div class="mb-5 flex flex-wrap items-end justify-between gap-3">
+          <h2 id="ejercicios-titulo" class="text-xl font-bold tracking-tight">Tu ruta de práctica</h2>
+          <p class="text-sm text-slate-500">Elige un escenario para empezar</p>
+        </div>
+        <div id="exercise-list" class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4"></div>
+      </section>
+
+      <section id="detalle" class="mt-8 scroll-mt-6 overflow-hidden rounded-2xl border border-slate-200 bg-white" aria-labelledby="detalle-titulo">
+        <div id="exercise-content" class="p-5 sm:p-8" aria-live="polite" aria-atomic="true"></div>
+      </section>
+
+      <noscript><p class="mt-6 rounded-xl border border-amber-300 bg-amber-50 p-5 text-amber-900">Activa JavaScript para ver los cuatro ejercicios y sus soluciones.</p></noscript>
+    </main>
+
+    <footer class="border-t border-slate-200 px-5 py-6 text-center text-xs text-slate-500">
+      ER Lab · Diseña primero. Construye después.
+    </footer>
+
+    <script>
+      const exercises = [
+        {
+          id: "articulos-encargos", image: "img/articulos_encargos_diagrama_er.png", title: "Artículos y encargos", category: "Clientes, pedidos y fábricas", level: "Intermedio", time: "40 min",
+          description: "Diseña pedidos con varias líneas, direcciones de envío y existencias por fábrica.",
+          statement: "Ejercicio 1: Artículos y encargos. Se desea diseñar una base de datos para una pequeña empresa que debe contener información acerca de clientes, artículos y pedidos. Hasta el momento se registran los siguientes datos en documentos varios: Para cada cliente: Número de cliente (único), Direcciones de envío (varias por cliente), Saldo, Límite de crédito (depende del cliente, pero en ningún caso debe superar los 3.000.000 euros), Descuento. Para cada artículo: Número de Artículo (único), Fábricas que lo distribuyen, Existencias de ese artículo en cada fábrica, Descripción del artículo. Para cada pedido: Cada pedido tiene una cabecera y el cuerpo del pedido. La cabecera del pedido está formada por el número de cliente, la dirección de envío y fecha del pedido. El cuerpo del pedido son varias líneas, en cada línea se especifican el número del artículo pedido y la cantidad. Además, se ha determinado que se debe almacenar la información de las fábricas. Sin embargo, dado el uso de distribuidores, se usará: Número de la fábrica (único) y Teléfono de contacto. Y se desean ver cuántos artículos (en total) provee la fábrica. También, por información estratégica, se podría incluir información de fábricas alternativas respecto de las que ya fabrican artículos para esta empresa. Una dirección se entenderá como Calle, Número, Ciudad y Código Postal. La fecha deberá incluir la hora. Se pide hacer el diagrama ER para la base de datos que represente esta información.",
+          tasks: ["Identifica entidades, claves, atributos compuestos y atributos derivados.", "Separa la cabecera del pedido de sus líneas y vincula el envío a una dirección del cliente.", "Resuelve la relación N:M artículo–fábrica, situando las existencias en esa relación.", "Modela las fábricas alternativas y documenta las cardinalidades, restricciones y supuestos."],
+          entities: [
+            { name: "CLIENTE", x: 20, y: 60, fields: ["PK num_cliente", "saldo", "limite_credito", "descuento"] },
+            { name: "DIRECCIÓN_ENVÍO", x: 420, y: 60, fields: ["PK, FK num_cliente", "PK id_direccion", "calle", "numero", "ciudad", "codigo_postal"] },
+            { name: "PEDIDO", x: 820, y: 60, fields: ["PK id_pedido", "FK num_cliente (*)", "FK id_direccion (*)", "fecha_hora"] },
+            { name: "ARTÍCULO", x: 20, y: 440, fields: ["PK num_articulo", "descripcion"] },
+            { name: "LÍNEA_PEDIDO", x: 420, y: 440, fields: ["PK, FK id_pedido", "PK num_linea", "FK num_articulo", "cantidad"] },
+            { name: "FÁBRICA", x: 20, y: 820, fields: ["PK num_fabrica", "telefono_contacto", "/ total_articulos (derivado)"] },
+            { name: "DISTRIBUCIÓN", x: 420, y: 820, fields: ["PK, FK num_fabrica", "PK, FK num_articulo", "existencias"] },
+            { name: "ALTERNATIVA", x: 820, y: 820, fields: ["PK, FK fabrica_base", "PK, FK fabrica_alternativa"] }
+          ],
+          diagram: {
+            width: 1120, height: 1230,
+            edges: [
+              { path: "M300 180 H420", x: 310, y: 165, label: "1 : 1..N" },
+              { path: "M700 180 H820", x: 710, y: 165, label: "1 : 0..N" },
+              { path: "M960 320 V380 H560 V440", x: 710, y: 370, label: "pedido 1 : 1..N líneas" },
+              { path: "M300 560 H420", x: 310, y: 545, label: "1 : 0..N" },
+              { path: "M160 700 V760 H560 V820", x: 300, y: 748, label: "artículo 1 : 1..N distribuciones" },
+              { path: "M300 940 H420", x: 310, y: 925, label: "1 : 0..N" },
+              { path: "M160 1080 V1130 H900 V1080", x: 410, y: 1118, label: "base: fábrica 1 : 0..N alternativas" },
+              { path: "M100 1080 V1190 H1020 V1080", x: 410, y: 1178, label: "alternativa: fábrica 1 : 0..N referencias" }
+            ]
+          },
+          relations: ["CLIENTE 1 — 1..N DIRECCIÓN_ENVÍO: cada dirección pertenece a un único cliente; se asume al menos una dirección por cliente.", "DIRECCIÓN_ENVÍO 1 — 0..N PEDIDO: cada pedido usa exactamente una dirección. Su cliente queda determinado por ella; un cliente puede tener 0..N pedidos.", "PEDIDO 1 — 1..N LÍNEA_PEDIDO: cada línea pertenece a un pedido. ARTÍCULO 1 — 0..N LÍNEA_PEDIDO: cada línea pide un artículo.", "ARTÍCULO 1 — 1..N DISTRIBUCIÓN y FÁBRICA 1 — 0..N DISTRIBUCIÓN resuelven la relación N:M. Se asume que todo artículo registrado tiene al menos una fábrica; una fábrica alternativa puede no distribuir todavía ningún artículo.", "FÁBRICA mantiene una relación recursiva N:M mediante ALTERNATIVA: cada fila tiene exactamente una fábrica base y una fábrica alternativa. Cada fábrica puede participar 0..N veces en cualquiera de los dos roles."],
+          rules: [
+            "Claves añadidas: id_pedido identifica el pedido, porque cliente + dirección + fecha no garantiza unicidad. id_direccion identifica una dirección dentro de su cliente; num_linea identifica una línea dentro del pedido. Se permite repetir un artículo en líneas distintas.",
+            "(*) PEDIDO usa una sola FK compuesta (num_cliente, id_direccion) hacia DIRECCIÓN_ENVÍO. Así, la dirección siempre pertenece al cliente de la cabecera, sin depender de dos referencias independientes.",
+            "Límite de crédito: valor obligatorio y como máximo 3.000.000 EUR. Cantidad: entero positivo. Existencias: entero no negativo. El saldo no se restringe a positivo, porque el enunciado no excluye saldos a favor.",
+            "Se propone representar el descuento como porcentaje entre 0 y 100; es un supuesto de implementación, no una unidad especificada en el enunciado. Los importes se almacenan como decimales exactos.",
+            "La fecha del pedido incluye hora (por ejemplo, TIMESTAMP). El número de calle, el código postal y el teléfono se tratan como texto para conservar letras, prefijos y ceros iniciales. La dirección es un atributo compuesto que aquí se transforma en entidad por ser multivaluado.",
+            "total_articulos es derivado: COUNT de los artículos distintos vinculados a cada fábrica en DISTRIBUCIÓN, incluyendo cero si no hay ninguno. Si «total» significa unidades físicas, se consultaría SUM(existencias); no es la misma medida ni se almacena como dato duplicado.",
+            "Se interpreta «alternativa» como una relación dirigida entre fábricas, sin asociarla a un artículo concreto ni suponer reciprocidad o transitividad. Se prohíbe que una fábrica sea alternativa de sí misma; la clave compuesta evita parejas repetidas.",
+            "Las participaciones mínimas (una dirección por cliente, una línea por pedido y una distribución por artículo) necesitan validación transaccional además de claves foráneas. Se asumen direcciones inmutables una vez usadas: los cambios crean otra dirección para conservar el envío histórico."
+          ],
+          note: "Notación ER con entidades asociativas y claves del modelo relacional. DISTRIBUCIÓN contiene las existencias porque dependen de la pareja artículo–fábrica. ALTERNATIVA representa los dos roles de la misma entidad FÁBRICA, no dos tipos distintos de fábrica."
+        },
+        {
+          id: "ventas", image: "img/servicio_de_venta_diagrama_er.png", title: "Sistema de ventas", category: "Proveedores, clientes y facturas", level: "Intermedio", time: "30 min",
+          description: "Organiza el catálogo, los contactos de clientes y el detalle histórico de cada factura.",
+          statement: "Ejercicio 2: Sistema de ventas. Te contratan para diseñar una Base de Datos que permita apoyar la gestión de un sistema de ventas. La empresa necesita llevar un control de proveedores, clientes, productos y ventas. Un proveedor tiene un CIF/NIF, nombre, dirección, teléfono y página web. Un cliente también tiene CIF/NIF, nombre, dirección, pero puede tener varios teléfonos de contacto. La dirección se entiende por Calle, Número, Ciudad y Código Postal. Un producto tiene un Id único, nombre, precio actual, stock y proveedor. Los productos se organizan en categorías, y cada producto va sólo en una categoría. Una categoría tiene Id, nombre y descripción. Por razones de contabilidad, se debe registrar la información de cada factura con un Número, fecha, cliente, descuento e importe final (con el iva). Además, se debe guardar el precio de cada producto al momento de la venta, la cantidad vendida y el importe total del producto.",
+          tasks: ["Identifica las entidades y representa la dirección como atributo compuesto.", "Modela por separado los teléfonos de contacto multivaluados del cliente.", "Resuelve la relación entre facturas y productos con una entidad de detalle.", "Distingue el precio actual del catálogo del precio histórico de cada venta."],
+          entities: [
+            { name: "CLIENTE", x: 20, y: 40, fields: ["PK CIF_NIF", "nombre", "direccion: calle, numero,", "ciudad, codigo_postal"] },
+            { name: "FACTURA", x: 420, y: 40, fields: ["PK numero_factura", "FK CIF_NIF_cliente", "fecha", "descuento", "importe_final_con_IVA"] },
+            { name: "DETALLE_FACTURA", x: 820, y: 40, fields: ["PK, FK numero_factura", "PK num_linea", "FK id_producto", "precio_venta", "cantidad", "importe_linea"] },
+            { name: "PROVEEDOR", x: 20, y: 430, fields: ["PK CIF_NIF", "nombre", "direccion: calle, numero,", "ciudad, codigo_postal", "telefono", "pagina_web"] },
+            { name: "PRODUCTO", x: 420, y: 430, fields: ["PK id_producto", "nombre", "precio_actual", "stock", "FK CIF_NIF_proveedor", "FK id_categoria"] },
+            { name: "CATEGORÍA", x: 820, y: 430, fields: ["PK id_categoria", "nombre", "descripcion"] },
+            { name: "TELÉFONO_CLIENTE", x: 820, y: 820, fields: ["PK, FK CIF_NIF_cliente", "PK telefono"] }
+          ],
+          diagram: {
+            width: 1120, height: 1140,
+            edges: [
+              { path: "M300 160 H420", x: 310, y: 145, label: "1 : 0..N" },
+              { path: "M700 160 H820", x: 710, y: 145, label: "1 : 1..N" },
+              { path: "M960 300 V360 H560 V430", x: 710, y: 350, label: "1 : 0..N" },
+              { path: "M300 550 H420", x: 310, y: 535, label: "1 : 0..N" },
+              { path: "M700 550 H820", x: 710, y: 535, label: "1 : 0..N" },
+              { path: "M300 160 H340 V780 H960 V820", x: 355, y: 770, label: "1 : 0..N" }
+            ]
+          },
+          relations: ["CLIENTE 1 — 0..N FACTURA: cada factura pertenece a un único cliente; un cliente puede no tener facturas o tener varias.", "FACTURA 1 — 1..N DETALLE_FACTURA: cada línea pertenece a una factura; se asume que una factura emitida contiene al menos una línea.", "PRODUCTO 1 — 0..N DETALLE_FACTURA: cada línea corresponde a un único producto. DETALLE_FACTURA resuelve la relación N:M entre facturas y productos.", "PROVEEDOR 1 — 0..N PRODUCTO: cada producto tiene exactamente un proveedor; un proveedor puede suministrar varios productos o ninguno.", "CATEGORÍA 1 — 0..N PRODUCTO: cada producto pertenece exactamente a una categoría; una categoría puede estar vacía.", "CLIENTE 1 — 0..N TELÉFONO_CLIENTE: cada teléfono registrado pertenece a un único cliente; el teléfono se identifica dentro del cliente."],
+          rules: [
+            "CIF/NIF se almacena como texto, no como número, para conservar letras y ceros iniciales. La dirección se descompone en calle, número, ciudad y código postal; se muestra como atributos de CLIENTE y PROVEEDOR.",
+            "TELÉFONO_CLIENTE representa el atributo multivaluado de contacto del cliente. Su clave compuesta (CIF_NIF_cliente, telefono) permite varios teléfonos y evita repetir el mismo número para un cliente. El teléfono del proveedor es un único atributo según el enunciado.",
+            "DETALLE_FACTURA usa (numero_factura, num_linea) como clave, por lo que puede incluir el mismo producto en líneas distintas. Si se establece la regla de una sola línea por producto y factura, se puede usar (numero_factura, id_producto) como clave en su lugar.",
+            "precio_actual pertenece al catálogo PRODUCTO; precio_venta conserva el precio aplicado al emitir la factura y no debe cambiar cuando se actualice el catálogo. cantidad debe ser positiva e importe_linea debe corresponder a cantidad × precio_venta.",
+            "El enunciado no especifica si descuento es porcentaje o importe, ni la tasa de IVA. Se deben definir esas reglas de negocio; importe_final_con_IVA almacena el total facturado tras aplicar descuento e IVA. Los importes se representan con decimales exactos.",
+            "La clave de FACTURA se asume única globalmente. Se requiere validar que el cliente, proveedor, categoría y producto referenciados existan, y que stock, precios y cantidades respeten sus restricciones."
+          ],
+          note: "El detalle de factura conserva los valores históricos de cada venta. El precio actual y el stock describen el catálogo/inventario vigente; el importe final de la factura no sustituye los importes guardados por línea."
+        },
+        {
+          id: "carreteras", image: "img/carreteras_diagrama_er.png", title: "Carreteras", category: "Red viaria y tramos", level: "Avanzado", time: "40 min",
+          description: "Representa la clasificación de la red, sus tramos, provincias y puntos de confluencia.",
+          statement: "Ejercicio 3: Carreteras. Diseñar un esquema E/R que recoja la organización de una base de datos para contener la información sobre todas las carreteras del país, sabiendo que se deben cumplir las siguientes especificaciones: Las carreteras están divididas en varias categorías y se desea guardar la siguiente información sobre las mismas: Código, Nombre, Titularidad, Nivel, Tipo de Vía, Acceso controlado, Doble calzada (estos dos campos llevan un valor booleano), Prefijo, Color, señal, Observaciones. Los tipos de vía pueden ser: Autopista, Autovía, Multicarril, Convencional (criterio físico/constructivo). La titularidad de una carretera puede ser Estatal, Autonómica, Provincial o Municipal. El nivel de una carretera es 1, 2 o 3. Las carreteras Estatales no tienen nivel. 1.º nivel → siempre autonómica (naranja). 2.º nivel → puede ser autonómica o provincial (verde). En muchas comunidades, las vías gestionadas por la Diputación se clasifican dentro del 2.º nivel de la red autonómica. 3.º nivel → puede ser autonómica, provincial o municipal (amarillo). Las carreteras se dividen en tramos. Un tramo siempre pertenece a una única carretera y no puede cambiar de carretera. Para cada tramo se desea guardar un código autogenerado, el código de la carretera al cual pertenece, el km inicial, el km final, generar su longitud, el tipo de terreno (Plano / Cuesta subida / Cuesta bajada), el entorno (Urbano / Travesía / Extraurbano), la velocidad límite, el número de carriles por sentido y observaciones adicionales (ejemplo, curva peligrosa). Además, un tramo puede pasar por varias provincias. Interesa saber el Km de la carretera y la provincia y comunidad autónoma, donde empieza el tramo y en donde termina. Para los tramos que suponen principio o final de carretera, interesa saber si es que la carretera concluye físicamente o es que confluye en otra carretera. En este caso, interesa conocer con qué carretera confluye y en qué kilómetro, tramo y provincia.",
+          tasks: ["Modela la carretera y sus tramos con una adscripción única e inmutable.", "Representa los intervalos de cada tramo que discurren por provincias y vincula cada provincia con su comunidad autónoma.", "Define las reglas de titularidad, nivel y color, incluido el caso estatal sin nivel.", "Modela los extremos de carretera y sus referencias cuando confluyen con otra vía."],
+          entities: [
+            { name: "CARRETERA", x: 20, y: 60, fields: ["PK codigo", "nombre", "titularidad", "nivel (opcional)", "tipo_via", "acceso_controlado", "doble_calzada", "prefijo", "color", "senal", "observaciones"] },
+            { name: "TRAMO", x: 420, y: 60, fields: ["PK id_tramo", "FK codigo_carretera", "km_inicial", "km_final", "/ longitud (derivada)", "tipo_terreno", "entorno", "velocidad_limite", "carriles_por_sentido", "observaciones"] },
+            { name: "EXTREMO_CARRETERA", x: 820, y: 60, fields: ["PK, FK codigo_carretera", "PK extremo (inicio/fin)", "FK id_tramo", "km", "tipo (fisico/confluencia)", "FK carretera_confluencia", "FK tramo_confluencia", "FK provincia_confluencia", "km_confluencia"] },
+            { name: "TRAMO_PROVINCIA", x: 20, y: 510, fields: ["PK id_paso", "FK id_tramo", "FK codigo_provincia", "km_inicio", "km_fin"] },
+            { name: "PROVINCIA", x: 420, y: 510, fields: ["PK codigo_provincia", "nombre", "FK id_comunidad"] },
+            { name: "COMUNIDAD_AUTÓNOMA", x: 820, y: 510, fields: ["PK id_comunidad", "nombre"] }
+          ],
+          diagram: {
+            width: 1120, height: 900,
+            edges: [
+              { path: "M300 235 H420", x: 310, y: 220, label: "1 : 1..N" },
+              { path: "M160 60 V25 H960 V60", x: 480, y: 19, label: "carretera 1 : 2 extremos" },
+              { path: "M560 389 V470 H160 V510", x: 300, y: 460, label: "1 : 1..N pasos" },
+              { path: "M300 600 H420", x: 310, y: 585, label: "provincia 1 : 0..N pasos" },
+              { path: "M700 600 H820", x: 710, y: 585, label: "comunidad 1 : 1..N provincias" }
+            ]
+          },
+          relations: ["CARRETERA 1 — 1..N TRAMO: cada tramo pertenece a una única carretera; se asume que toda carretera registrada tiene al menos un tramo.", "Cada CARRETERA tiene dos EXTREMO_CARRETERA, uno de inicio y otro de fin. Cada extremo pertenece a una sola carretera y se sitúa en uno de sus tramos.", "TRAMO 1 — 1..N TRAMO_PROVINCIA y PROVINCIA 1 — 0..N TRAMO_PROVINCIA: la entidad asociativa registra los intervalos de km de cada tramo que atraviesan cada provincia.", "COMUNIDAD_AUTÓNOMA 1 — 1..N PROVINCIA: cada provincia pertenece a una comunidad autónoma; la comunidad de los puntos inicial y final del tramo se obtiene a través de la provincia correspondiente.", "La confluencia es una relación recursiva de CARRETERA: un extremo puede confluir con otra carretera y señala el tramo, la provincia y el km concretos de esa confluencia."],
+          rules: [
+            "tipo_via admite Autopista, Autovía, Multicarril o Convencional; titularidad admite Estatal, Autonómica, Provincial o Municipal. acceso_controlado y doble_calzada son booleanos.",
+            "nivel es nulo para titularidad Estatal. Nivel 1 requiere titularidad Autonómica y color naranja; nivel 2 admite Autonómica o Provincial y color verde; nivel 3 admite Autonómica, Provincial o Municipal y color amarillo. Estas dependencias requieren restricciones de validación además de las claves.",
+            "Se modela TRAMO_PROVINCIA como intervalo de km dentro de un tramo: km_inicio y km_fin deben estar dentro de los límites del tramo, km_inicio < km_fin y los intervalos deben cubrirlo sin solapamientos ni huecos. id_paso permite que un tramo vuelva a atravesar una misma provincia.",
+            "La longitud del tramo es derivada: km_final − km_inicial. Los km se expresan en la misma referencia kilométrica de la carretera y deben ser coherentes con los intervalos provinciales. El sentido descendente de km requiere acordar si se normalizan los extremos o se admite longitud absoluta.",
+            "Los extremos inicio/fin se identifican por (codigo_carretera, extremo). km y id_tramo indican su posición en la propia carretera; el tramo debe pertenecer a esa carretera. Una carretera tiene exactamente un extremo de cada tipo.",
+            "Si tipo es fisico, las referencias a carretera, tramo, provincia y km de confluencia quedan vacías. Si es confluencia, esas referencias son obligatorias, deben apuntar a una ubicación existente de otra carretera y no se permite confluir consigo misma. La carretera de confluencia se puede validar contra la carretera propietaria del tramo referenciado.",
+            "El enunciado no proporciona códigos ni atributos descriptivos para provincias y comunidades autónomas; se añaden identificadores y nombre para poder referenciarlas. La clasificación de nivel 2 puede incluir vías gestionadas por diputaciones, representadas con titularidad Provincial.",
+            "Se asume que cada punto kilométrico de inicio/fin pertenece a una única provincia. Si coincide exactamente con un límite provincial, debe definirse una regla de asignación o admitir ambas provincias para ese punto."
+          ],
+          note: "TRAMO_PROVINCIA conserva el recorrido territorial de cada tramo. Los datos de provincia y comunidad autónoma de sus extremos se consultan desde esos intervalos, evitando duplicarlos en TRAMO. La ubicación de una confluencia se guarda en EXTREMO_CARRETERA."
+        },
+        {
+          id: "vuelos", title: "Sistema de vuelos", category: "Aeropuertos, programas y escalas", level: "Avanzado", time: "40 min",
+          description: "Distingue los programas de sus vuelos realizados y representa las escalas en orden.",
+          statement: "Ejercicio 4: Sistema de vuelos. Se desea obtener el diagrama E/R para un sistema de control de vuelos adaptado a las siguientes reglas de gestión. De cada aeropuerto se conoce su código, nombre, ciudad y país. En cada aeropuerto pueden tomar tierra diversos modelos de aviones; el modelo de un avión determina su capacidad, es decir, el número de plazas. En cada aeropuerto existe una colección de programas de vuelo. En cada programa de vuelo se indica el número de vuelo, la línea aérea y los días de la semana en que existe dicho vuelo. Cada programa de vuelo despega de un aeropuerto y aterriza en otro. Los números de vuelo son únicos para todo el mundo. En cada aeropuerto hay múltiples aterrizajes y despegues. Todos los aeropuertos contemplados están en activo, es decir, tienen algún aterrizaje y algún despegue. Cada vuelo realizado pertenece a un cierto programa de vuelo. Para cada vuelo se quiere conocer su fecha, plazas vacías y el modelo de avión utilizado. Algunos programas de vuelo incorporan escalas técnicas intermedias entre los aeropuertos de salida y de llegada. Se entiende por escala técnica un aterrizaje y despegue consecutivos sin altas o bajas de pasajeros. De cada vuelo se quieren conocer las escalas técnicas ordenadas, asignándole a cada una un número de orden. Por ejemplo, el programa de vuelo 555 de Iberia, con vuelos los lunes y jueves, despega de Barajas (Madrid, España) y aterriza en Caudell (Sydney, Australia), teniendo las siguientes escalas técnicas: 1) Los Pradiños (Sao Paulo, Brasil), 2) El Emperador (Santiago, Chile) y 3) Saint Kitts (Auckland, Nueva Zelanda). ¿Qué cambios se producirían en el caso anterior si en las escalas pudiesen bajar o subir pasajeros? Explica cómo se podría representar esta nueva situación.",
+          tasks: ["Separa el programa recurrente del vuelo concreto realizado en una fecha.", "Representa los aeropuertos de salida y llegada como dos roles distintos.", "Modela la compatibilidad entre aeropuertos y modelos de avión, y el modelo usado en cada vuelo.", "Ordena las escalas por vuelo realizado y explica cómo añadir itinerarios de pasajeros."],
+          entities: [
+            { name: "AEROPUERTO", x: 20, y: 60, fields: ["PK codigo_aeropuerto", "nombre", "ciudad", "pais"] },
+            { name: "PROGRAMA_VUELO", x: 420, y: 60, fields: ["PK numero_vuelo (global)", "linea_aerea", "FK aeropuerto_salida", "FK aeropuerto_llegada"] },
+            { name: "VUELO_REALIZADO", x: 820, y: 60, fields: ["PK, FK numero_vuelo", "PK fecha", "plazas_vacias", "FK modelo_avion"] },
+            { name: "MODELO_AVION", x: 20, y: 620, fields: ["PK id_modelo", "capacidad"] },
+            { name: "MODELO_ADMITIDO", x: 420, y: 620, fields: ["PK, FK codigo_aeropuerto", "PK, FK id_modelo"] },
+            { name: "ESCALA_TÉCNICA", x: 820, y: 620, fields: ["PK, FK numero_vuelo", "PK, FK fecha", "PK numero_orden", "FK codigo_aeropuerto"] },
+            { name: "DÍA_PROGRAMA", x: 420, y: 960, fields: ["PK, FK numero_vuelo", "PK dia_semana"] }
+          ],
+          diagram: {
+            width: 1120, height: 1280,
+            edges: [
+              { path: "M300 190 H420", x: 310, y: 175, label: "salida 1 : 0..N" },
+              { path: "M160 60 V25 H560 V60", x: 350, y: 19, label: "llegada 1 : 0..N" },
+              { path: "M700 190 H820", x: 710, y: 175, label: "programa 1 : 0..N vuelos" },
+              { path: "M300 290 V560 H960 V620", x: 410, y: 550, label: "aeropuerto 1 : 0..N escalas" },
+              { path: "M280 320 V520 H560 V620", x: 310, y: 510, label: "aeropuerto 1 : 0..N modelos" },
+              { path: "M560 320 V960", x: 570, y: 920, label: "programa 1 : 1..7 días" },
+              { path: "M300 750 H420", x: 310, y: 735, label: "modelo 1 : 0..N admisiones" },
+              { path: "M820 300 V490 H160 V620", x: 410, y: 480, label: "modelo 1 : 0..N vuelos" },
+              { path: "M960 320 V620", x: 970, y: 450, label: "vuelo 1 : 0..N escalas" }
+            ]
+          },
+          relations: ["AEROPUERTO (salida) 1 — 0..N PROGRAMA_VUELO y AEROPUERTO (llegada) 1 — 0..N PROGRAMA_VUELO: cada programa tiene exactamente un aeropuerto de salida y otro de llegada, que se asumen distintos.", "PROGRAMA_VUELO 1 — 0..N VUELO_REALIZADO: un programa puede no haberse realizado todavía o tener muchos vuelos; cada vuelo realizado corresponde a un único programa.", "PROGRAMA_VUELO 1 — 1..7 DÍA_PROGRAMA: los días de operación son un atributo multivaluado del programa, modelado aparte para guardar uno o varios días sin duplicarlos.", "AEROPUERTO N — M MODELO_AVION mediante MODELO_ADMITIDO: registra qué modelos pueden aterrizar en cada aeropuerto. MODELO_AVION determina la capacidad y un vuelo realizado utiliza exactamente un modelo.", "VUELO_REALIZADO 1 — 0..N ESCALA_TÉCNICA y AEROPUERTO 1 — 0..N ESCALA_TÉCNICA: cada escala es una parada intermedia en un aeropuerto y lleva un número de orden único dentro de su vuelo.", "Todo aeropuerto registrado participa en al menos un aterrizaje y un despegue de vuelos realizados; esta participación mínima es una regla global que requiere validación adicional."],
+          rules: [
+            "numero_vuelo es clave primaria global de PROGRAMA_VUELO, tal como indica el enunciado. VUELO_REALIZADO se identifica mediante (numero_vuelo, fecha), suponiendo que un programa tiene como máximo una realización por fecha.",
+            "DÍA_PROGRAMA contiene un valor por día de la semana (por ejemplo, lunes); la clave compuesta (numero_vuelo, dia_semana) impide repetir el mismo día. Se asume que todo programa tiene al menos un día operativo.",
+            "plazas_vacias debe ser un entero no negativo y no puede superar la capacidad del modelo asignado. El número de plazas ocupadas se deriva como capacidad − plazas_vacias; validar que el modelo permita aterrizar en los aeropuertos correspondientes.",
+            "ESCALA_TÉCNICA usa (numero_vuelo, fecha, numero_orden) como clave, de modo que el orden se reinicia en cada vuelo realizado. El aeropuerto de cada escala debe ser intermedio: distinto de la salida y la llegada del programa. Se permiten cero o más escalas.",
+            "En el escenario original, una escala es técnica y no tiene pasajeros que suban o bajen. El modelo no registra movimientos de pasajeros; solo la parada y su orden.",
+            "Si se permiten embarques y desembarques en escalas, dejan de ser exclusivamente técnicas y pasan a ser paradas comerciales. Se añade PASAJERO y una entidad asociativa RESERVA/ITINERARIO (por ejemplo, id_reserva, pasajero, vuelo realizado, aeropuerto_embarque y aeropuerto_desembarque). Ambos aeropuertos deben pertenecer a la ruta y el orden de embarque debe preceder al de desembarque; también se pueden guardar asiento y estado de la reserva. Esto permite representar pasajeros que recorren solo una parte del vuelo.",
+            "Los aeropuertos de salida, llegada y escalas son paradas efectivas del vuelo. La compatibilidad del modelo debe comprobarse, como mínimo, para los aeropuertos donde aterriza. Que cada aeropuerto tenga aterrizajes y despegues no se garantiza solo con claves foráneas."
+          ],
+          note: "Una escala técnica pertenece a una realización concreta del programa, no solo al programa: así se conserva el orden efectivo de cada vuelo. Si hay embarque o desembarque, se modela el viaje de cada pasajero como una reserva con sus puntos de subida y bajada."
+        }
+      ];
+
+      const list = document.getElementById("exercise-list");
+      const content = document.getElementById("exercise-content");
+
+      function renderDiagram(exercise) {
+        const diagram = exercise.diagram;
+        const height = diagram ? 260 : 220;
+        const entities = exercise.entities.map((entity, index) => {
+          const x = entity.x ?? (20 + index * 320);
+          const y = entity.y ?? 25;
+          const cardHeight = Math.max(height, 86 + Math.max(0, entity.fields.length - 1) * 27);
+          return `<g>
+            <rect x="${x}" y="${y}" width="280" height="${cardHeight}" rx="12" fill="white" stroke="#cbd5e1" />
+            <rect x="${x + 1}" y="${y + 1}" width="278" height="42" rx="11" fill="#eef2ff" />
+            <text x="${x + 18}" y="${y + 28}" fill="#3730a3" font-size="14" font-weight="700">${entity.name}</text>
+            ${entity.fields.map((field, row) => `<text x="${x + 18}" y="${y + 69 + row * 27}" fill="#334155" font-size="13">${field}</text>`).join("")}
+          </g>`;
+        }).join("");
+        const edges = diagram
+          ? diagram.edges.map((edge) => `<path d="${edge.path}" fill="none" stroke="#6366f1" stroke-width="2" /><text x="${edge.x}" y="${edge.y}" fill="#4338ca" font-size="12" font-weight="700">${edge.label}</text>`).join("")
+          : `<path d="M300 140 H340 M620 140 H660" stroke="#6366f1" stroke-width="2" /><g fill="#4338ca" font-size="12" font-weight="700"><text x="305" y="129">1</text><text x="325" y="129">N</text><text x="624" y="129">N</text><text x="646" y="129">1</text></g>`;
+        return `<svg viewBox="0 0 ${diagram ? diagram.width : 960} ${diagram ? diagram.height : 270}" class="w-full ${diagram ? "min-w-[1100px]" : "min-w-[760px]"}" role="img" aria-labelledby="diagram-title-${exercise.id} diagram-desc-${exercise.id}" xmlns="http://www.w3.org/2000/svg">
+          <title id="diagram-title-${exercise.id}">Modelo relacional propuesto: ${exercise.title}</title>
+          <desc id="diagram-desc-${exercise.id}">${exercise.relations.join(" ")} Las entidades y sus atributos también se describen debajo del gráfico.</desc>
+          ${edges}
+          ${entities}
+        </svg>`;
+      }
+
+      function selectExercise(id) {
+        const exercise = exercises.find((item) => item.id === id);
+        if (!exercise) throw new Error(`Ejercicio desconocido: ${id}`);
+        list.querySelectorAll("button").forEach((button) => {
+          const selected = button.dataset.exercise === id;
+          button.setAttribute("aria-pressed", String(selected));
+          button.classList.toggle("border-indigo-600", selected);
+          button.classList.toggle("ring-1", selected);
+          button.classList.toggle("ring-indigo-600", selected);
+          button.classList.toggle("border-slate-200", !selected);
+        });
+        content.innerHTML = `
+          <div class="flex flex-wrap items-center gap-2 text-xs font-semibold">
+            <span class="rounded-md bg-indigo-50 px-2 py-1 text-indigo-700">Ejercicio ${String(exercises.indexOf(exercise) + 1).padStart(2, "0")}</span>
+            <span class="text-slate-500">${exercise.level} · ${exercise.time} estimados</span>
+          </div>
+          <h2 id="detalle-titulo" class="mt-4 text-2xl font-bold tracking-tight sm:text-3xl">${exercise.title}</h2>
+          <div class="mt-6 grid gap-7 lg:grid-cols-[1.3fr_1fr]">
+            <div><h3 class="text-sm font-bold">Enunciado</h3><p class="mt-3 text-sm leading-7 text-slate-600">${exercise.statement}</p></div>
+            <div class="rounded-xl bg-slate-50 p-5"><h3 class="text-sm font-bold">Tu reto</h3><ol class="mt-3 list-decimal space-y-3 pl-5 text-sm leading-relaxed text-slate-600">${exercise.tasks.map((task) => `<li class="pl-1">${task}</li>`).join("")}</ol></div>
+          </div>
+          <details class="group mt-7 border-t border-slate-200 pt-5">
+            <summary class="w-fit rounded-lg text-sm font-semibold text-indigo-700"><span class="group-open:hidden">Ver solución: diagrama E/R</span><span class="hidden group-open:inline">Ocultar diagrama E/R</span></summary>
+            <div class="mt-5">
+              <figure id="provided-diagram-${exercise.id}" class="hidden">
+                <img alt="Diagrama E/R de ${exercise.title}" class="mx-auto h-auto max-h-[75vh] w-auto max-w-full rounded-xl border border-slate-200 object-contain" />
+              </figure>
+              <p id="diagram-pending-${exercise.id}" class="text-sm text-slate-500">El diagrama E/R estará disponible próximamente.</p>
+            </div>
+          </details>`;
+        const providedDiagram = content.querySelector(`#provided-diagram-${exercise.id}`);
+        const diagramPending = content.querySelector(`#diagram-pending-${exercise.id}`);
+        const image = providedDiagram.querySelector("img");
+        const imageExtensions = ["png", "jpg", "jpeg", "webp", "svg"];
+        const imageCandidates = exercise.image ? [exercise.image] : imageExtensions.map((extension) => `img/${exercise.id}.${extension}`);
+        let imageIndex = 0;
+        image.addEventListener("load", () => {
+          providedDiagram.classList.remove("hidden");
+          diagramPending.classList.add("hidden");
+        }, { once: true });
+        image.addEventListener("error", () => {
+          imageIndex += 1;
+          if (imageIndex < imageCandidates.length) {
+            image.src = imageCandidates[imageIndex];
+          } else {
+            providedDiagram.remove();
+          }
+        });
+        image.src = imageCandidates[imageIndex];
+        if (exercise.id === "articulos-encargos") {
+          content.insertAdjacentHTML("beforeend", `
+            <section class="mt-8 border-t border-slate-200 pt-6" aria-labelledby="parte-dos-${exercise.id}">
+              <h3 id="parte-dos-${exercise.id}" class="text-lg font-bold">Enunciado · Parte 2</h3>
+              <p class="mt-2 text-sm leading-relaxed text-slate-600">Transformar el ejercicio 1 al modelo relacional.</p>
+              <details class="group mt-5 border-t border-slate-200 pt-5">
+                <summary class="w-fit rounded-lg text-sm font-semibold text-indigo-700"><span class="group-open:hidden">Ver transformación al modelo relacional</span><span class="hidden group-open:inline">Ocultar transformación al modelo relacional</span></summary>
+                <p class="my-5 rounded-lg border-l-4 border-indigo-500 bg-indigo-50 p-4 text-sm leading-relaxed text-indigo-900">Se conserva el diagrama E/R inicial para mostrar la evolución del diseño. En esta fase, el modelo se transforma al modelo relacional; las decisiones y ajustes respecto al diagrama se explican en las notas de cada ejercicio.</p>
+                <pre class="mt-5 overflow-x-auto rounded-lg bg-slate-100 p-4"><code>CLIENTE (<u>NumCliente</u>, Saldo, LimiteCredito, Descuento, Telefono)</code></pre>
+                <pre class="mt-5 overflow-x-auto rounded-lg bg-slate-100 p-4"><code>DIRECCION_ENVIO (<u>IdDireccion</u>, Calle, Numero, CodigoPostal, Ciudad, NumCliente)
+
+donde
+{NumCliente} referencia CLIENTE
+UNIQUE (NumCliente, IdDireccion)</code></pre>
+                <pre class="mt-5 overflow-x-auto rounded-lg bg-slate-100 p-4"><code>PEDIDO (<u>NumPedido</u>, FechaHoraPedido, NumCliente, IdDireccion)
+
+donde
+{NumCliente + IdDireccion} referencia DIRECCION_ENVIO</code></pre>
+                <pre class="mt-5 overflow-x-auto rounded-lg bg-slate-100 p-4"><code>LINEA_PEDIDO (<u>NumPedido + NumLinea</u>, NumArticulo, Cantidad, PrecioUnitario)
+
+donde
+{NumPedido} referencia PEDIDO
+{NumArticulo} referencia ARTICULO</code></pre>
+                <pre class="mt-5 overflow-x-auto rounded-lg bg-slate-100 p-4"><code>ARTICULO (<u>NumArticulo</u>, Descripcion)</code></pre>
+                <pre class="mt-5 overflow-x-auto rounded-lg bg-slate-100 p-4"><code>FABRICA (<u>NumFabrica</u>, TelefonoContacto)</code></pre>
+                <pre class="mt-5 overflow-x-auto rounded-lg bg-slate-100 p-4"><code>FABRICA_ARTICULO (<u>NumFabrica + NumArticulo</u>, Existencias)
+
+donde
+{NumFabrica} referencia FABRICA
+{NumArticulo} referencia ARTICULO</code></pre>
+                <pre class="mt-5 overflow-x-auto rounded-lg bg-slate-100 p-4"><code>FABRICA_ALTERNATIVA (<u>NumFabrica + NumFabricaAlternativa</u>)
+
+donde
+{NumFabrica} referencia FABRICA
+{NumFabricaAlternativa} referencia FABRICA</code></pre>
+                <h3 class="mb-3 mt-6 text-lg font-semibold">Notas y restricciones del modelo relacional</h3>
+                <pre class="overflow-x-auto rounded-lg bg-slate-100 p-4"><code>- LimiteCredito: no puede superar los 3.000.000 euros.
+
+- FechaHoraPedido: incluye fecha y hora.
+
+- Total de artículos por fábrica: es un dato derivado.
+  Se calcula contando los artículos distintos de FABRICA_ARTICULO
+  para cada fábrica. No se almacena como columna.
+
+- FABRICA_ALTERNATIVA: NumFabrica debe ser diferente
+  de NumFabricaAlternativa. Una fábrica no puede
+  ser alternativa de sí misma.</code></pre>
+              </details>
+            </section>`);
+        } else if (exercise.id === "ventas") {
+          content.insertAdjacentHTML("beforeend", `
+            <details class="group mt-8 border-t border-slate-200 pt-5">
+              <summary class="w-fit rounded-lg text-sm font-semibold text-indigo-700"><span class="group-open:hidden">Ver transformación al modelo relacional</span><span class="hidden group-open:inline">Ocultar transformación al modelo relacional</span></summary>
+              <p class="my-5 rounded-lg border-l-4 border-indigo-500 bg-indigo-50 p-4 text-sm leading-relaxed text-indigo-900">Se conserva el diagrama E/R inicial para mostrar la evolución del diseño. En esta fase, el modelo se transforma al modelo relacional; las decisiones y ajustes respecto al diagrama se explican en las notas de cada ejercicio.</p>
+              <pre class="mt-5 overflow-x-auto rounded-lg bg-slate-100 p-4"><code>PROVEEDOR (<u>CIF_NIF</u>, Nombre, Calle, Numero, Ciudad, CodigoPostal, Telefono, PaginaWeb)</code></pre>
+              <pre class="mt-5 overflow-x-auto rounded-lg bg-slate-100 p-4"><code>PRODUCTO (<u>IdProducto</u>, Nombre, PrecioActual, Stock, CIF_NIF, IdCategoria)
+
+donde
+{CIF_NIF} referencia PROVEEDOR
+{IdCategoria} referencia CATEGORIA</code></pre>
+              <pre class="mt-5 overflow-x-auto rounded-lg bg-slate-100 p-4"><code>CATEGORIA (<u>IdCategoria</u>, Nombre, Descripcion)</code></pre>
+              <pre class="mt-5 overflow-x-auto rounded-lg bg-slate-100 p-4"><code>CLIENTE (<u>CIF_NIF</u>, Nombre, Calle, Numero, Ciudad, CodigoPostal)</code></pre>
+              <pre class="mt-5 overflow-x-auto rounded-lg bg-slate-100 p-4"><code>TELEFONO (<u>IdTelefono</u>, Numero, CIF_NIF)
+
+donde
+{CIF_NIF} referencia CLIENTE</code></pre>
+              <pre class="mt-5 overflow-x-auto rounded-lg bg-slate-100 p-4"><code>FACTURA (<u>NumFactura</u>, Fecha, Descuento, ImporteFinal, CIF_NIF)
+
+donde
+{CIF_NIF} referencia CLIENTE</code></pre>
+              <pre class="mt-5 overflow-x-auto rounded-lg bg-slate-100 p-4"><code>FACTURA_LINEA (<u>NumFactura + NumLinea</u>, PrecioVenta, Cantidad, ImporteTotalProducto, IdProducto)
+
+donde
+{NumFactura} referencia FACTURA
+{IdProducto} referencia PRODUCTO</code></pre>
+              <section class="mt-6 rounded-lg bg-slate-100 p-4 sm:p-6" aria-labelledby="notas-ventas">
+                <h3 id="notas-ventas" class="text-base font-semibold sm:text-lg">Notas y restricciones</h3>
+                <ul class="mt-3 list-disc space-y-2 break-words pl-5 text-sm leading-relaxed text-slate-700">
+                  <li>La transformación separa los teléfonos multivaluados del cliente en una tabla propia y utiliza FACTURA_LINEA para representar los productos de cada factura y conservar su precio histórico.</li>
+                  <li>Cada producto pertenece a una única categoría.</li>
+                  <li>Cada producto tiene un único proveedor.</li>
+                  <li>PrecioVenta conserva el precio del producto en el momento de realizar la venta.</li>
+                  <li>ImporteTotalProducto corresponde al importe de la línea de factura.</li>
+                  <li>ImporteFinal incluye el IVA y el descuento.</li>
+                  <li>La clave primaria de FACTURA_LINEA es (NumFactura, NumLinea).</li>
+                </ul>
+              </section>
+            </details>`);
+        } else if (exercise.id === "carreteras") {
+          content.insertAdjacentHTML("beforeend", `
+            <details class="group mt-8 border-t border-slate-200 pt-5">
+              <summary class="w-fit rounded-lg text-sm font-semibold text-indigo-700"><span class="group-open:hidden">Ver transformación al modelo relacional</span><span class="hidden group-open:inline">Ocultar transformación al modelo relacional</span></summary>
+              <p class="my-5 rounded-lg border-l-4 border-indigo-500 bg-indigo-50 p-4 text-sm leading-relaxed text-indigo-900">Se conserva el diagrama E/R inicial para mostrar la evolución del diseño. En esta fase, el modelo se transforma al modelo relacional; las decisiones y ajustes respecto al diagrama se explican en las notas de cada ejercicio.</p>
+              <pre class="mt-5 overflow-x-auto rounded-lg bg-slate-100 p-4"><code>CATEGORIA (<u>IdCategoria</u>, Nombre, Descripcion)</code></pre>
+              <pre class="mt-5 overflow-x-auto rounded-lg bg-slate-100 p-4"><code>CARRETERA (<u>Codigo</u>, Nombre, Prefijo, Color, Señal, Observaciones, Titularidad, Nivel, TipoVia, AccesoControlado, DobleCalzada, IdCategoria)
+
+donde
+{IdCategoria} referencia CATEGORIA(IdCategoria)</code></pre>
+              <pre class="mt-5 overflow-x-auto rounded-lg bg-slate-100 p-4"><code>TRAMO (<u>IdTramo</u>, CodigoCarretera, KmInicial, KmFinal, TipoTerreno, Entorno, VelocidadLimite, NumCarrilesPorSentido, Observaciones, IdProvinciaInicio, IdProvinciaFin)
+
+donde
+{CodigoCarretera} referencia CARRETERA(Codigo)
+{IdProvinciaInicio} referencia PROVINCIA(IdProvincia)
+{IdProvinciaFin} referencia PROVINCIA(IdProvincia)
+UNIQUE (CodigoCarretera, IdTramo)</code></pre>
+              <pre class="mt-5 overflow-x-auto rounded-lg bg-slate-100 p-4"><code>COMUNIDAD_AUTONOMA (<u>IdComunidad</u>, Nombre)</code></pre>
+              <pre class="mt-5 overflow-x-auto rounded-lg bg-slate-100 p-4"><code>PROVINCIA (<u>IdProvincia</u>, Nombre, IdComunidad)
+
+donde
+{IdComunidad} referencia COMUNIDAD_AUTONOMA(IdComunidad)</code></pre>
+              <pre class="mt-5 overflow-x-auto rounded-lg bg-slate-100 p-4"><code>EXTREMO_CARRETERA (<u>IdExtremo</u>, Posicion, TipoExtremo, KmExtremo, CodigoCarretera, IdTramo, IdProvincia, KmConfluencia, IdTramoConfluencia, IdProvinciaConfluencia)
+
+donde
+{CodigoCarretera} referencia CARRETERA(Codigo)
+{CodigoCarretera + IdTramo} referencia TRAMO(CodigoCarretera, IdTramo)
+{IdProvincia} referencia PROVINCIA(IdProvincia)
+{IdTramoConfluencia} referencia TRAMO(IdTramo)
+{IdProvinciaConfluencia} referencia PROVINCIA(IdProvincia)
+UNIQUE (CodigoCarretera, Posicion)</code></pre>
+              <pre class="mt-5 overflow-x-auto rounded-lg bg-slate-100 p-4"><code>TRAYECTO (<u>IdTramo</u>, <u>IdPaso</u>, IdProvincia, KmInicio, KmFin)
+
+donde
+{IdTramo} referencia TRAMO(IdTramo)
+{IdProvincia} referencia PROVINCIA(IdProvincia)</code></pre>
+              <section class="mt-6 rounded-lg bg-slate-100 p-4 sm:p-6" aria-labelledby="notas-carreteras-relacional">
+                <h3 id="notas-carreteras-relacional" class="text-base font-semibold sm:text-lg">Notas y restricciones</h3>
+                <ul class="mt-3 list-disc space-y-2 break-words pl-5 text-sm leading-relaxed text-slate-700">
+                  <li>Claves primarias: CATEGORIA(IdCategoria), CARRETERA(Codigo), TRAMO(IdTramo), COMUNIDAD_AUTONOMA(IdComunidad), PROVINCIA(IdProvincia), EXTREMO_CARRETERA(IdExtremo) y TRAYECTO(IdTramo, IdPaso).</li>
+                  <li>Durante la transformación al modelo relacional se decidió separar ComunidadAutonoma de PROVINCIA, creando la entidad COMUNIDAD_AUTONOMA para mejorar la normalización respecto al diagrama E/R inicial.</li>
+                  <li>IdPaso distingue cada intervalo recorrido por un tramo; así, el mismo tramo puede atravesar una provincia más de una vez. KmInicio y KmFin delimitan el intervalo de esa provincia.</li>
+                  <li>KmExtremo, IdTramo e IdProvincia sitúan el extremo de la propia carretera. KmConfluencia, IdTramoConfluencia e IdProvinciaConfluencia sitúan el punto de confluencia. Hay que validar que el kilómetro y la provincia correspondan a los intervalos de TRAYECTO del tramo indicado.</li>
+                  <li>Posicion solo admite «inicio» o «final». UNIQUE (CodigoCarretera, Posicion) impide repetir la misma posición en una carretera. La existencia de ambos extremos para cada carretera debe comprobarse por separado. TipoExtremo distingue un final físico de una confluencia; en el primer caso, los datos de confluencia quedan vacíos y, en el segundo, deben indicarse. También debe validarse que el tramo de confluencia pertenezca a una carretera distinta de la del extremo.</li>
+                  <li>Para cada TRAMO, IdProvinciaInicio debe coincidir con la provincia del intervalo inicial de TRAYECTO, e IdProvinciaFin con la del intervalo final. Los kilómetros y provincias de ambos extremos deben ser coherentes con la ubicación dentro de esos intervalos.</li>
+                  <li>La longitud de cada tramo es derivada: KmFinal − KmInicial. Los intervalos de TRAYECTO deben quedar dentro de los kilómetros del tramo y cubrirlo sin huecos ni solapamientos.</li>
+                  <li>Las carreteras estatales no tienen nivel. Nivel 1 es autonómico y naranja; nivel 2, autonómico o provincial y verde; nivel 3, autonómico, provincial o municipal y amarillo.</li>
+                </ul>
+              </section>
+            </details>`);
+        } else if (exercise.id === "vuelos") {
+          content.insertAdjacentHTML("beforeend", `
+            <details class="group mt-8 border-t border-slate-200 pt-5">
+              <summary class="w-fit rounded-lg text-sm font-semibold text-indigo-700"><span class="group-open:hidden">Ver transformación al modelo relacional</span><span class="hidden group-open:inline">Ocultar transformación al modelo relacional</span></summary>
+              <p class="my-5 rounded-lg border-l-4 border-indigo-500 bg-indigo-50 p-4 text-sm leading-relaxed text-indigo-900">Se conserva el diagrama E/R inicial para mostrar la evolución del diseño. En esta fase, el modelo se transforma al modelo relacional; las decisiones y ajustes respecto al diagrama se explican en las notas del ejercicio.</p>
+            </details>`);
+        }
+      }
+
+      list.innerHTML = exercises.map((exercise, index) => `
+        <button type="button" data-exercise="${exercise.id}" aria-pressed="false" aria-controls="detalle" class="flex h-full flex-col rounded-2xl border border-slate-200 bg-white p-5 text-left transition hover:border-indigo-400 hover:shadow-sm motion-reduce:transition-none">
+          <span class="flex w-full items-center justify-between gap-2"><span class="text-2xl font-bold tracking-tight text-indigo-600">${String(index + 1).padStart(2, "0")}</span><span class="rounded-full bg-slate-100 px-2 py-1 text-[11px] font-semibold text-slate-600">${exercise.level}</span></span>
+          <span class="mt-5 text-base font-bold">${exercise.title}</span>
+          <span class="mt-1 text-xs font-medium text-indigo-600">${exercise.category}</span>
+          <span class="mt-3 flex-1 text-sm leading-relaxed text-slate-500">${exercise.description}</span>
+          <span class="mt-5 text-xs font-semibold text-slate-600">Explorar ejercicio <span aria-hidden="true">→</span></span>
+        </button>`).join("");
+
+      list.addEventListener("click", (event) => {
+        const button = event.target.closest("button[data-exercise]");
+        if (button && list.contains(button)) selectExercise(button.dataset.exercise);
+      });
+      selectExercise(exercises[0].id);
+    </script>
+  </body>
+</html>
